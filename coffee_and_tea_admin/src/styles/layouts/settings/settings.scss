@@ -1,0 +1,113 @@
+@use '../../abstracts/mixins/flex' as *;
+
+.wrap-settings {
+    width: 95%;
+    height: auto;
+    min-height: 80dvh;
+    display: flex;
+    flex-direction: column;
+}
+
+.title_box {
+    display: flex;
+    justify-content: start;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.title_box svg {
+    font-size: 1.5rem;
+}
+
+.wrap-body-settings {
+    width: 100%;
+    height: 80dvh;
+    @include flex-row-space-between-center;
+}
+
+.wrap-admin-space {
+    background-color: white;
+    width: 100%;
+    height: 100%;
+    border-radius: 5px;
+}
+
+.wrap-admin-space h3 {
+    border-bottom: 1px solid gray;
+    padding: 1rem;
+}
+
+.admin-info {
+    padding: 1rem 2rem;
+    display: flex;
+    justify-content: start;
+}
+
+.-w-admin-info {
+    width: 80%;
+    display: flex;
+    justify-content: start;
+    flex-direction: column;
+    gap: 1.2rem;
+}
+
+.value_admin_box {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+    width: 85%;
+  }
+  .value_admin_box p {
+    font-size: 0.9rem;
+  }
+  .value_admin_box input,
+  .value_admin_box select,
+  .value_admin_box textarea {
+    outline: none;
+    border: 1px solid gray;
+    border-radius: 2px;
+    padding: 0.5rem;
+    cursor: pointer;
+    color: rgba(0, 0, 0, 0.8);
+  }
+  .value_admin_box input[type="file"] {
+    display: none;
+  }
+
+.wrap-setting-func {
+    background-color: white;
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
+    gap: 1rem;
+}
+
+.-settings-btn {
+    border: 1px solid #0005;
+    padding: 0.5rem;
+    @include flex-row-center-center;
+    border-radius: 2px;
+    cursor: pointer;
+    background-color: rgba(30, 10, 44, 0.796);
+    color: white;
+    width: 85%;
+}
+
+.wrap-setting-func img {
+    border: 1px solid rgba(0, 0, 0, 0.33);
+    width: 250px;
+    height: 250px;
+    border-radius: 100%;
+}
+
+.-setting-upload-avt {
+    width: 100%;
+    @include flex-row-center-center;
+    gap: 0.5rem;
+    cursor: pointer;
+    border: 1px solid gray;
+    border-radius: 2px;
+    padding: 0.5rem;
+    font-size: 0.8rem;
+}
