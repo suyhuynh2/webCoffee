@@ -1,11 +1,10 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { Helmet } from 'react-helmet-async';
 import { useState } from 'react';
 
 import Header from '../layouts/header';
 import Sidebar from '../layouts/sidebar';
-import { usePageSwitch, 
-            useChangeLoginPage 
-        } from '../hooks/usePageSwitch';
+import { usePageSwitch, useChangeLoginPage } from '../hooks/usePageSwitch';
 
 export default function MainLayout() {
 

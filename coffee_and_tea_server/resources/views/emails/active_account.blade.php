@@ -1,13 +1,14 @@
-<div style="width: 600px; margin: 0 auto">
-    <div style="text-align: center">
-        <h2>Xin Chào</h2> 
-        <br>
-        <h2>{{ $name }}</h2>
-        <p>Bạn đã đăng ký tài khoản tại hệ thống chúng tôi</p>
-        <p>Để tiếp tục sử dụng dịch vụ vui lòng nhấn nút vào nút kích hoạt ở bên dưới.</p>
-        <a href="{{ route('activeAccount', ['admin' => $email, 'token' => $token]) }}" 
-           style="display: inline-block; background: green; color: #fff; padding: 7px 25px; font-weight: bolder">
+<div>
+    <div>
+        <p>Xin Chào, <span>{{ $name }}</span></p>
+        <p>Cảm ơn bạn đã đăng ký dịch vụ của chúng tôi, vui lòng nhấn vào "Xác thực tài khoản" để tiếp tục sử dụng dịch vụ</p>
+        <p>Xin cảm ơn!</p>
+        <a href="{{ route('verify.token', ['email' => $email, 'token' => $token, 'handle' => 'verify_account']) }}"
+           style="text-decoration: underline">
             Kích hoạt tài khoản
         </a>
+        <p><b><i><u>Email chỉ có hiệu lực trong 5 phút!</u></i></b></p>
+        <br>
+        <p>Coffe & Tea</p>
     </div>
 </div>

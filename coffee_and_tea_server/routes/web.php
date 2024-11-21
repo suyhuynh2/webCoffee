@@ -17,4 +17,9 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/active/{admin}/{token}', [AuthController::class, 'active'])->name('activeAccount');
+Route::get('/VerifyToken/{email}/{token}/{handle}',
+            [AuthController::class, 'VerifyToken'])->name('verify.token');
+
+Route::get('/verify_page', function () {
+    return view('verify_page');
+})->name('verify.page');

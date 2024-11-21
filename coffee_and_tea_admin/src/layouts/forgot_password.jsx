@@ -2,11 +2,19 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUser, faCoffee, faHeart } from '@fortawesome/free-solid-svg-icons';
 import { faFacebook, faGoogle, faTwitter} from '@fortawesome/free-brands-svg-icons';
+import { useState } from 'react';
+import { ForgotPasswordAPI } from '../app/api/auth';
 
 export default function ForgotPassword({setForm}) {
     const handleSetForm = (item) => {
         setForm(item);
     }
+
+    const [email, setEmail] = useState('');
+    const handleForgotPassword = () => {
+        ForgotPasswordAPI(email);
+    }
+
     return(
         <>
         <div className="wrap-form-login" >
@@ -18,11 +26,14 @@ export default function ForgotPassword({setForm}) {
                 <div className="input-box">
                     <label htmlFor="">
                         <FontAwesomeIcon icon={faUser} />
-                        <input type="email" placeholder="Email" />
+                        <input type="email" placeholder="Email" 
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
+                        />
                     </label>
                 </div>
 
-                <button className='login-box-btn'>Gửi mật khẩu mới</button>
+                <button className='login-box-btn' onClick={handleForgotPassword}>Gửi mật khẩu mới</button>
 
                 <div className="label-register">
                     <p>Tôi nhớ ra mật khẩu rồi.</p>
