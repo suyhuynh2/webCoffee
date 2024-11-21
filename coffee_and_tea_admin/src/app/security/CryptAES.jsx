@@ -65,12 +65,12 @@ const mixEncodedData = (AESKey, encryptData, iv, timeStr) => {
     }
 
     // cấu trúc lại chuỗi mã hóa hoàn chỉnh
-    const mixEncodeData = encryptDataBase64.slice(0, 8) // phần đầu của chuỗi mã hóa
+    const mixEncodeData =  encryptDataBase64.slice(0, 8) // phần đầu của chuỗi mã hóa
                           + mixedParts.slice(0, 32)     // Lấy một phần của mixedParts
                           + timeStrBase64               // timeStr
                           + mixedParts.slice(32)        // Lấy phần còn lại của mixedParts
                           + encryptDataBase64.slice(8); // phần còn lại của chuỗi mã hóa
-
+                          
     return mixEncodeData;
 }
 

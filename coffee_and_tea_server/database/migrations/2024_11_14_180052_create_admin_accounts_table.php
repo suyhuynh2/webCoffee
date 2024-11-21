@@ -20,7 +20,7 @@ return new class extends Migration
             $table->string('phone');
             $table->string('image')->nullable();
             $table->string('birth_date')->nullable();
-            $table->rememberToken()->nullable();
+            $table->string('verify')->nullable();
             $table->timestamps();
         });
     }

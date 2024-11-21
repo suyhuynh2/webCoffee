@@ -1,4 +1,4 @@
-export function validInfoAdmin(data) {
+export function validRegister(data) {
   for (let e of data) {
       if (!fullField(e)) {
           return false;
@@ -32,14 +32,28 @@ export function validInfoAdmin(data) {
 
 export const validLogin = (data) => {
   for (let e of data) {
-      fullField(e);
-      containWhiteSpace(e);
+      if (!fullField(e)) {
+          return false;
+      }
+      if (containWhiteSpace(e)) {
+          return false;
+      }
   }
-  isValidEmail(data[0]);
-  isValidLengthPassword(data[1]);
+  
+  if (!isValidEmail(data[0])) {
+    alert('Email không hợp lệ');
+    return false;
+  }
+
+  if (!isValidLengthPassword(data[1])) {
+      return false;
+  }
+  
   return true;
 }
 
+
+// ================== //
 export const fullField = (data) => {
   if (!data || data.trim() === '') {
       alert('Vui lòng nhập đầy đủ thông tin');

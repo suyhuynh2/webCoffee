@@ -4,7 +4,7 @@ namespace App\Security;
 
 use DateTime;
 
-class CryptAES {
+class CryptAES2 {
 
     static function generateAESKey() {
         return random_bytes(32);
