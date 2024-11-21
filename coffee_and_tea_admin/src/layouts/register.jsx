@@ -67,9 +67,7 @@ export default function Register(
                     <hr />
                 </div>
 
-                <button className='login-box-btn' 
-                onClick={handleRegister}
-                >Đăng ký tài khoản</button>
+                <button className='login-box-btn' onClick={handleRegister}>Đăng ký tài khoản</button>
 
                 <div className="label-login">
                     <p>Đã có tài khoản!!...</p>

@@ -24,4 +24,6 @@ Route::post('/admin_register', [AuthController::class, 'AdminRegister']);
 
 Route::post('/admin_login', [AuthController::class, 'AdminLogin']);
 
+Route::post('/admin_forgot_password', [AuthController::class, 'AdminForgotPassword']);
+
 Route::get('/get_all_cus', [CustomerController::class, 'getAllData']);

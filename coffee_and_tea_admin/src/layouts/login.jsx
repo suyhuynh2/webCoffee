@@ -1,16 +1,8 @@
 /* eslint-disable react/prop-types */
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faUser,
-  faLock,
-  // faCoffee
-} from "@fortawesome/free-solid-svg-icons";
-import {
-  faFacebook,
-  faGoogle,
-  faTwitter,
-} from "@fortawesome/free-brands-svg-icons";
-import { useState } from "react";
+import { faUser, faLock } from "@fortawesome/free-solid-svg-icons";
+import { faFacebook, faGoogle, faTwitter, } from "@fortawesome/free-brands-svg-icons";
+import { useEffect, useState } from "react";
 import { LoginAPI } from "../app/api/auth";
 
 export default function Login({ setForm }) {
@@ -27,6 +19,12 @@ export default function Login({ setForm }) {
     LoginAPI(email, password, setIsHidden);
   }
 
+  useEffect(() => {
+    if (localStorage.getItem('jwt_token')) {
+      setIsHidden(false);
+    }
+  })
+
   return (
     <>
       <div className="wrap-form-login" style={{display: isHidden ? 'flex' : 'none'}}>
@@ -40,12 +38,12 @@ export default function Login({ setForm }) {
             <label htmlFor="">
               <FontAwesomeIcon icon={faUser} />
               <input type="email" placeholder="Email" 
-              value={email} onChange={(e) => setEmail(e.target.value)}/>
+                value={email} onChange={(e) => setEmail(e.target.value)}/>
             </label>
 
             <label htmlFor="">
               <FontAwesomeIcon icon={faLock} />
-              <input type="password" placeholder="Mật khẩu" 
+              <input type="password" placeholder="Mật khẩu"
               value={password} onChange={(e) => setPassword(e.target.value)}/>
             </label>
 
