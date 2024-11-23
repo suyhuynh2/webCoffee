@@ -3,6 +3,7 @@ import { useSettingSwitch } from "../../hooks/usePageSwitch";
 import { useState } from "react";
 
 export default function AdminSpace() {
+    console.log("ADMIN SPACE: RENDER");
     const { setActiveSpace, renderSpace } = useSettingSwitch();
     const [isdisabled, setisdisabled] = useState(true);
 

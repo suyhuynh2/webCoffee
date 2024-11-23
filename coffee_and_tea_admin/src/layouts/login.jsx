@@ -1,11 +1,14 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable react/prop-types */
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUser, faLock } from "@fortawesome/free-solid-svg-icons";
 import { faFacebook, faGoogle, faTwitter, } from "@fortawesome/free-brands-svg-icons";
+
 import { useEffect, useState } from "react";
 import { LoginAPI } from "../app/api/auth";
+import { useTokenExpiration } from "../hooks/useTokenExpiration";
 
-export default function Login({ setForm }) {
+export default function Login({ setForm, setActivePage  }) {
   const handleSetForm = (item) => {
     setForm(item);
   };
@@ -15,15 +18,22 @@ export default function Login({ setForm }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const handleLogin = () => {
-    LoginAPI(email, password, setIsHidden);
-  }
-
+  useTokenExpiration({ setIsHidden });      
+  
   useEffect(() => {
     if (localStorage.getItem('jwt_token')) {
       setIsHidden(false);
+      setActivePage('dashboard');
     }
-  })
+  }, []);
+
+  const handleLogin = () => {
+    LoginAPI(email, password, setIsHidden, setActivePage);
+  }
+
+  // localStorage.removeItem('jwt_token')
+  // localStorage.removeItem('id_admin')
+  // localStorage.removeItem('exp')
 
   return (
     <>

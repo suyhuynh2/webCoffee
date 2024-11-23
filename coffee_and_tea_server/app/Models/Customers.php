@@ -18,8 +18,9 @@ class Customers extends Model
         'birth_date',
         'address',
         'total_price',
-        'status',
         'image',
+        'status',
+        'verify',
         'created_at',
         'updated_at',
     ];

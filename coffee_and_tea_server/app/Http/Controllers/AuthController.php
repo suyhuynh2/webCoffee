@@ -108,7 +108,9 @@ class AuthController extends Controller {
                 // trả response json => client
                 return response()->json([
                     'message' => 'Đăng nhập thành công',
-                    'token_jwt' => $jwt_token
+                    'jwt_token' => $jwt_token,
+                    'id_admin' => $admin->id,
+                    'exp' => now()->addMinutes(config('jwt.ttl'))->timestamp
                 ], 200);
             }
 
@@ -153,7 +155,7 @@ class AuthController extends Controller {
 
 /* --------------------------------------------------------------------------------------------------------- */
 
-    // Gửi mail xác thực
+    // Gửi mail xác thực + lấy lại mật khẩu
     public function SendEmail($email, $handle) {
         try {
             $admin = Admin::where('email', $email)->first();
