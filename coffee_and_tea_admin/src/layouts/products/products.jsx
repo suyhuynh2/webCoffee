@@ -5,6 +5,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBoxes } from "@fortawesome/free-solid-svg-icons";
 
 export default function Products () {
+    console.log("PRODUCTS: RENDER");
     const {isOpen, handleOpenForm} = useChangePrdForm();
 
     return (

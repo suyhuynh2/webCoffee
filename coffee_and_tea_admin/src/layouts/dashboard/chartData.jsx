@@ -34,7 +34,9 @@ export default function ChartData() {
             </div>
 
             <TableTopPrd/>
+            
             <LineChartNewCustomers/>
+
             <TableTopUser/>
         </div>
         </>

@@ -6,17 +6,20 @@ export const RegisterAPI = async (name, email, password, re_password, phone, set
     try {
         const data = [name, email, password, re_password, phone];
         if (validRegister(data)) {    
-            const response = await axios.post('http://127.0.0.1:8000/api/admin_register', {
+            const response = await axios.post(
+              'http://127.0.0.1:8000/api/admin_register',
+              {
                 name: encryptAES(name),
                 email: encryptAES(email),
                 password: hashPassword(password),
                 phone: encryptAES(phone)
-            },
-            {
+              },
+              {
                 headers: {
                     'Content-Type': 'application/json'
                 }
-            });
+              }
+            );
 
             if (response.status === 201) {
                 alert(response.data.message)
@@ -28,12 +31,13 @@ export const RegisterAPI = async (name, email, password, re_password, phone, set
     }   
 }
 
-export const LoginAPI = async (email, password, setIsHidden) => {
+export const LoginAPI = async (email, password, setIsHidden, setActivePage) => {
   try {
       const data = [email, password];
       if (validLogin(data)) {
         const response = await axios.post(
-          "http://127.0.0.1:8000/api/admin_login", {
+          "http://127.0.0.1:8000/api/admin_login",
+          {
             email: encryptAES(email),
             password: hashPassword(password)
           },
@@ -46,10 +50,12 @@ export const LoginAPI = async (email, password, setIsHidden) => {
 
       switch (response.status) {
         case 200: {
-          alert(response.data.message);
           setIsHidden(false);
-          // lưu token vào localStorage
+          setActivePage('dashboard');
           localStorage.setItem('jwt_token', response.data.jwt_token);
+          localStorage.setItem('id_admin', response.data.id_admin);
+          localStorage.setItem('exp', response.data.exp);  
+          alert(response.data.message);
           break;
         }
 
@@ -76,7 +82,8 @@ export const ForgotPasswordAPI = async (email) => {
   try {
     if (isValidEmail(email)) {
         const response = await axios.post(
-          "http://127.0.0.1:8000/api/admin_forgot_password", {
+          "http://127.0.0.1:8000/api/admin_forgot_password",
+          {
             email: encryptAES(email)
           },
           {

@@ -2,6 +2,8 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CustomerController;
+use App\Http\Controllers\DashboardController;
+
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -16,14 +18,19 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
+// Ném tất cả API vào middleware auth:api
+Route::middleware('auth:api')->group(function () {
+    Route::get('/get_all_product', [DashboardController::class, 'getAllProduct']);
+    Route::get('/get_all_revenue', [DashboardController::class, 'getAllRevenue']);
 });
 
+/* API mở, không cần check middleware() */
 Route::post('/admin_register', [AuthController::class, 'AdminRegister']);
 
 Route::post('/admin_login', [AuthController::class, 'AdminLogin']);
 
 Route::post('/admin_forgot_password', [AuthController::class, 'AdminForgotPassword']);
 
+// thằng này của tài thì phải => middleware()
 Route::get('/get_all_cus', [CustomerController::class, 'getAllData']);
+
