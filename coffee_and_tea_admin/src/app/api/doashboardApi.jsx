@@ -14,8 +14,6 @@ export const getAllProductAPI = async () => {
                     }
                 }
             );
-
-            console.log('API Response:', response.data);
     
             if (response.status === 200) {
                 return {
@@ -71,13 +69,13 @@ export const getAllRevenueAPI = async () => {
 }
 
 
-export const getAllOrders = async () => {
+export const getAllOrdersAPI = async () => {
     try {
         const jwt_token = localStorage.getItem('jwt_token');
 
         if (jwt_token) {
             const response = await axios.get(
-                'http://127.0.0.1:8000/api/get_all_orders',
+                'http://127.0.0.1:8000/api/get_all_order',
                 {
                     headers: {
                         'Authorization' : `Bearer ${jwt_token}`,
@@ -85,20 +83,16 @@ export const getAllOrders = async () => {
                     }
                 }
             );
-
-            console.log('API Response:', response.data);
     
             if (response.status === 200) {
                 return {
-                    orders: response.data.orders || [], 
-                    sum_quantity: response.data.sum_quantity || 0
+                    orders: response.data.orders || []
                 };
             }
         }
 
         return {
-            orders: [],
-            sum_quantity: 0
+            orders: []
         };
 
     }catch (error) {
