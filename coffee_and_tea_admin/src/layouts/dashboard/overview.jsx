@@ -1,27 +1,43 @@
+/* eslint-disable react/prop-types */
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBoxes, faShoppingCart, faDollarSign, faUser } from '@fortawesome/free-solid-svg-icons';
 
-export default function OverviewDashboard() {
+export default function OverviewDashboard(
+    { 
+        curRev, 
+        prevRev 
+    }
+) {
     return(
         <>
             <div className="data-overview">
                 <div className="data-box">
+                    {/* theo tháng */}
                     <div className='data-box-top'>
-                        <FontAwesomeIcon icon={faBoxes } />
+                        <FontAwesomeIcon icon={ faBoxes } />
                         <div className="in4-box">
-                            <p>Tổng số sản phẩm</p>
-                            <h3>3020</h3>
+                            {/* tổng sp đã bán trong tháng */}
+                            <p>Sản phẩm đã bán</p> 
+                            <h3>{curRev}</h3>
                         </div>
                     </div>
                     <hr />
-                    <p className="sale-title"><span style={{color: "green"}}>+55%</span> tuần trước</p>
+                    {/* so sánh vs sản phẩm đã bán được của tháng trước */}
+                    <p className="sale-title">
+                        <span style={{color: (curRev - prevRev) > 0 ? "green" : "red"}}>
+                            {((curRev - prevRev) > 0) ? 
+                                `+ ${(((curRev-prevRev)/prevRev)*100).toFixed(2)}% ` :
+                                `${(((curRev-prevRev)/prevRev)*100).toFixed(2)}% `}
+                        </span>
+                        tháng trước
+                    </p>
                 </div>
                 <div className="data-box">
                     <div className='data-box-top'>
                         <FontAwesomeIcon icon={faShoppingCart } />
                         <div className="in4-box">
                             <p>Tổng số đơn hàng</p>
-                            <h3>3020</h3>
+                            <h3></h3>
                         </div>
                     </div>
                     <hr />

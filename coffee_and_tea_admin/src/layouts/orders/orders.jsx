@@ -3,6 +3,7 @@ import ShowOrders from "./show_orders";
 import { faShoppingCart } from "@fortawesome/free-solid-svg-icons";
 
 export default function Orders () {
+    console.log("ORDERS: RENDER");
     return (
     <>
         <div className="wrap-orders">

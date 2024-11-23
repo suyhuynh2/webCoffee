@@ -4,7 +4,7 @@ import { faHome, faBoxes, faShoppingCart, faUsers, faArrowLeft, faGear, faCoffee
 import { useState } from 'react';
 
 export default function Sidebar({isOpen, hidden, setActivePage}) {
-    const [selectedItem, setSelectedItem] = useState('dashboard');
+    const [selectedItem, setSelectedItem] = useState('');
 
     const handleItemClick = (item) => {
         setSelectedItem(item);

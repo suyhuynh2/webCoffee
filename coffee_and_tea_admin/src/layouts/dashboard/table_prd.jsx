@@ -78,10 +78,9 @@ const Table = () => {
   return (
     <div className="wrap-top-prod">
       <div className='-header-top-prd' style={{
-          borderBottom: "1px solid gray",
           borderRadius: "5px 5px 0 0"
         }}>
-        <h3>Top sản phẩm bán chạy</h3>
+        <h3>Top 10 sản phẩm bán chạy</h3>
         
         <input
             type="text"
@@ -91,10 +90,8 @@ const Table = () => {
             style={{ 
                 marginRight: '10px',
                 padding: '10px', 
-                width: '250px', 
-                borderRight: 'none',
-                borderLeft: 'none',
-                borderTop: 'none',
+                width: '250px',
+                border: "1px solid rgba(175, 175, 175, 0.5)",
                 background: 'rgba(251, 251, 251, 0.971)',
                 outline: 'none',
                 borderRadius: "5px"
@@ -103,12 +100,17 @@ const Table = () => {
       </div>
 
       {/* Bảng DataTable */}
-      <div style={{ maxHeight: '330px', overflowY: 'auto' }}>
+      <div style={{
+        maxHeight: '320px',
+        overflowY: 'auto',
+        border: "1px solid rgba(175, 175, 175, 0.5)",
+        borderRadius: "5px"
+      }}>
         <DataTable
           columns={columns}
           data={filteredData}
           fixedHeader
-          fixedHeaderScrollHeight="330px"  // Giới hạn chiều cao cho phần thân cuộn
+          fixedHeaderScrollHeight="320px"  // Giới hạn chiều cao cho phần thân cuộn
           responsive
           highlightOnHover
           striped

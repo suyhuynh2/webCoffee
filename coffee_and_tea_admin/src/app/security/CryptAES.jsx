@@ -81,7 +81,7 @@ export const encryptAES = (data) => {
     const timestamp = timeStamp();
     const timeStr_ = timestamp.map((unit) => String(unit).padStart(2, '0')).join('');
 
-    // tạo newAESKey để mã hóa, lấy iv, timeShift 
+    // tạo newAESKey để mã hóa, lấy iv, timeShift
     const {newAESKey, iv, timeStr} = tranformeKey(AESKey, ivCode, timeStr_);
 
     // mã hóa dữ liệu = newAESKey

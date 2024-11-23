@@ -11,7 +11,7 @@ import Register from "../layouts/register";
 import ForgotPassword from "../layouts/forgot_password";
 
 export function usePageSwitch() {
-    const [activePage, setActivePage] = useState('dashboard');
+    const [activePage, setActivePage] = useState('');
 
     const renderPage = () => {
         switch (activePage) {
@@ -31,7 +31,7 @@ export function usePageSwitch() {
                 return <Custumers/>;
 
             default:
-                return <Dashboard/>
+                return <></>
         }
     }
 

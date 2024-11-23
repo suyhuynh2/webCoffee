@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { Helmet } from 'react-helmet-async';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 import Header from '../layouts/header';
 import Sidebar from '../layouts/sidebar';
@@ -17,28 +17,23 @@ export default function MainLayout() {
 
     return(
         <>
-        <div className='wrap-home-page'>
+            <div className='wrap-home-page'>
 
-            {/* form */}
-            {renderFrom({setForm})}
+                {renderFrom({setForm, setActivePage})}
 
-            {/* title */}
-            <Helmet><title>Admin</title></Helmet>
+                <Helmet><title>Admin</title></Helmet>
 
-            {/* sidebar */}
-            <Sidebar isOpen={isOpenSidebar} hidden={toggleSidebar} setActivePage={setActivePage} />
+                <Sidebar isOpen={isOpenSidebar}
+                        hidden={toggleSidebar} 
+                        setActivePage={setActivePage}
+                />
 
-            {/* WORK SPACE */}
-            <div className='wrap-work-space'>
+                <div className='wrap-work-space'>
+                    <Header openSidebar={toggleSidebar} />
+                    {renderPage()}
+                </div>
 
-                {/* header */}
-                <Header openSidebar={toggleSidebar} />
-
-                {/* render page */}
-                {renderPage()}
             </div>
-
-        </div>
         </>
     )
 }
