@@ -3,6 +3,7 @@ import ShowCustomers from "./show_custm";
 import { faUser } from "@fortawesome/free-solid-svg-icons";
 
 export default function Custumers () {
+    console.log("CUSTOMERS: RENDER");
     return (
     <>
         <div className="wrap-customers">

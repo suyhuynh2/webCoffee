@@ -2,30 +2,29 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
+use Illuminate\Foundation\Auth\User as Authenticatable;
 use Tymon\JWTAuth\Contracts\JWTSubject;
+use Illuminate\Notifications\Notifiable;
 
-class Admin extends Model implements JWTSubject {
-    use HasFactory;
+class Admin extends Authenticatable implements JWTSubject
+{
+    use Notifiable;
 
     protected $table = 'admin_accounts';
-    protected $primaryKey = 'id';
     protected $fillable = [
-        'id',
         'name',
         'email',
         'password',
         'phone',
         'image',
-        'birth_date',
         'verify'
     ];
 
     protected $hidden = [
-        'password',
+        'password'
     ];
 
+    // JWT required methods
     public function getJWTIdentifier()
     {
         return $this->getKey();
