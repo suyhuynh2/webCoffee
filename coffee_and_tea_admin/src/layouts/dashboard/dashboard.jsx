@@ -9,7 +9,11 @@ import { faHome } from "@fortawesome/free-solid-svg-icons"
 export default function Dashboard() {
     console.log("DASHBOARD: RENDER");
     
-    const { curQuantityRevMth, prevQuantityRevMth } = useDashboard();
+    const {
+        orderFinish, orderQuantity, 
+        quantity, quantityCurrentMonth, quantityPrevMonth,
+        revenueCurrentMonth, revenuePrevMonth, totalRevenue
+    } = useDashboard();
 
     return(
     <>
@@ -20,8 +24,14 @@ export default function Dashboard() {
             </div>
 
             <OverviewDashboard
-                curRev={curQuantityRevMth}
-                prevRev={prevQuantityRevMth}
+                orderFinish={orderFinish}
+                orderQuantity={orderQuantity}
+                quantity={quantity}
+                quantityCurrentMonth={quantityCurrentMonth}
+                quantityPrevMonth={quantityPrevMonth}
+                totalRevenue={totalRevenue}
+                revenueCurrentMonth={revenueCurrentMonth}
+                revenuePrevMonth={revenuePrevMonth}
             />
             
             <ChartData/>

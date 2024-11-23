@@ -1,68 +1,50 @@
 /* eslint-disable no-unused-vars */
-import { all } from "axios";
-import { getAllProductAPI, getAllRevenueAPI } from "../app/api/doashboardApi";
+import { getAllOrdersAPI, getAllRevenueAPI } from "../app/api/doashboardApi";
 import { useEffect, useState } from "react";
+
+const currentDate = new Date();
 
 export const useDashboard = () => {
     const [ revenue, setRevenue ] = useState([]);
-    const [ currentRevenue, setCurrentRevenue ] = useState([]);
-    const [ prevRevenue, setPrevRevenue ] = useState([]);
     const [ orders, setOrders ] = useState([])
 
     useEffect(() => {
-        fetchRevenue(setCurrentRevenue, setPrevRevenue, setRevenue);
+        fetchRevenue(setRevenue);
         fetchOrders(setOrders);
     }, []);
 
-    const curQuantityRevMth = calQuantityRevMonth(currentRevenue);
-    const prevQuantityRevMth = calQuantityRevMonth(prevRevenue);
 
-    return { 
-        curQuantityRevMth ,
-        prevQuantityRevMth
+    // sản phẩm + doanh thu đã bán tháng hiện tại và tháng trước đó
+    const {
+        quantity, quantityCurrentMonth, quantityPrevMonth,
+        totalRevenue, revenueCurrentMonth, revenuePrevMonth
+    } = calculatedRevenue(revenue);
+
+    // đơn hàng trong tháng
+    const { countFinish, orderQuantity } = countOrders(orders);
+
+    console.log("revenueCurrentMonth: ", revenueCurrentMonth);
+    console.log("revenuePrevMonth: ", revenuePrevMonth);
+    
+
+    return {
+        quantity,
+        quantityCurrentMonth,
+        quantityPrevMonth,
+        totalRevenue, 
+        revenueCurrentMonth, 
+        revenuePrevMonth,
+        orderFinish: countFinish,
+        orderQuantity
     }
 }
 
 // ====================================================================================================== //
-const fetchProducts = (setQuantityPrds) => {
-    getAllProductAPI().then(
-        data => {
-            setQuantityPrds(data.quantity_prd);
-        }
-    )
-    .catch(err => {
-        console.log("Error: ", err);
-    })
-}
 
-const fetchRevenue = (setCurrentRevenue, setPrevRevenue, setRevenue) => {
+const fetchRevenue = (setRevenue) => {
     getAllRevenueAPI().then(
         data => {
-            const revenues = data.revenues;
-            console.log("revenues: ", revenues);
-
-            // lấy time hiện tại
-            const currentDate = new Date();
-            const currentMonth = currentDate.getMonth() + 1;
-            const prevMonth = currentMonth - 1;
-
-            // chia 3 mảng
-            const allRevenue = [];
-            const currentRev = [];
-            const prevRev = [];
-
-            // foreach để lấy dữ liệu
-            revenues.forEach(revenue => {
-                const revenueMonth = (new Date(revenue.date)).getMonth() + 1;
-                allRevenue.push(revenue);
-                if (revenueMonth === currentMonth) currentRev.push(revenue);
-                if (revenueMonth === prevMonth) prevRev.push(revenue);
-            });
-
-            // cập nhật giá trị cho useState
-            setRevenue(allRevenue);
-            setCurrentRevenue(currentRev);
-            setPrevRevenue(prevRev);
+            setRevenue(data.revenues)
         }
     )
     .catch(err => {
@@ -71,9 +53,9 @@ const fetchRevenue = (setCurrentRevenue, setPrevRevenue, setRevenue) => {
 }
 
 const fetchOrders = (setOrders) => {
-    getAllProductAPI().then(
+    getAllOrdersAPI().then(
         data => {
-            setOrders(data.quantity_prd);
+            setOrders(data.orders);
         }
     )
     .catch(err => {
@@ -83,10 +65,52 @@ const fetchOrders = (setOrders) => {
 
 // ======================================================================================================== //
 
-const calQuantityRevMonth = (revenue) => {
+const calculatedRevenue = (revenue) => {
     let quantity = 0;
+    let quantityPrevMonth = 0;
+    let quantityCurrentMonth = 0;
+    let totalRevenue = 0;
+    let revenueCurrentMonth = 0;
+    let revenuePrevMonth = 0;
+     
     revenue.forEach(e => {
-        quantity += parseInt(e.quantity);
+        quantity += e.quantity;
+        totalRevenue += e.total_revenue;
+        
+        const revenueRecorMonth = (new Date(e.created_at)).getMonth() + 1;
+        const currentMonth = currentDate.getMonth() + 1;
+
+        if (currentMonth === revenueRecorMonth) {
+            quantityCurrentMonth++;
+            revenueCurrentMonth += e.total_revenue;
+        }
+
+        if (currentMonth - 1 === revenueRecorMonth) {
+            quantityPrevMonth++;
+            revenuePrevMonth += e.total_revenue;
+        }
     })
-    return quantity;
+    return {
+        quantity, 
+        quantityPrevMonth,
+        quantityCurrentMonth, 
+        totalRevenue,
+        revenueCurrentMonth,
+        revenuePrevMonth
+    };
+}
+
+const countOrders = (orders) => {
+    let orderQuantity = 0;
+    let countFinish = 0;
+    orders.forEach(e => {
+        const orderMonth = (new Date(e.created_at)).getMonth() + 1;
+        const currentMonth = (new Date()).getMonth() + 1;
+
+        if (orderMonth === currentMonth) {
+            orderQuantity++;
+            if (e.status === 0) countFinish++;
+        }
+    })
+    return { countFinish, orderQuantity };
 }

@@ -42,7 +42,7 @@ class AuthController extends Controller {
                 'password' => $request->input('password'),
                 'phone' => $phone,
                 'image' => asset('admins/avt-dep.jpg'),
-                'verify' => '0'
+                'verify' => 0
             ]);
 
             $this->SendEmail($email, 'verify_account');
@@ -81,7 +81,7 @@ class AuthController extends Controller {
             // check passs
             if ($password === $admin->password) {
                 // đúng => check verify
-                if ($admin->verify === '0') {
+                if ($admin->verify === 0) {
 
                     $this->SendEmail($email, 'verify_account');
 
@@ -251,7 +251,7 @@ class AuthController extends Controller {
             // Cập nhật dữ liệu phụ thuộc vào handle
             if ($handle == 'verify_account') {
                 Admin::where('email', $email)->update([
-                    'verify' => '1',
+                    'verify' => 1,
                     'email_verified_at' => now()
                 ]);
             }
