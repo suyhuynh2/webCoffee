@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Inventory;
+use App\Models\Orders;
 use App\Models\Products;
 use App\Models\Revenue;
 
@@ -14,13 +15,11 @@ class DashboardController extends Controller {
 
             if ($products->isEmpty())
                 return response()->json([
-                    'products' => [],
-                    'quantity_prd' => 0
+                    'products' => []
                 ], 200);
 
             return response()->json([
-                'products' => $products,
-                'quantity_prd' => $products->sum('quantity')
+                'products' => $products
             ], 200);
         }catch (\Exception $e) {
             return response()->json([
@@ -35,12 +34,27 @@ class DashboardController extends Controller {
             if ($revenues) {
                 return response()->json([
                     'revenues' => $revenues
-                ]);
+                ], 200);
             }
         }catch (\Exception $e) {
             return response()->json([
                 'message' => 'Message: ' . $e->getMessage()
             ], 500);
+        }
+    }
+
+    public function getAllOrders() {
+        try {
+            $orders = Orders::all();
+            if ($orders) {
+                return response()->json([
+                    'orders' => $orders
+                ], 200);
+            }
+        }catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Message: ' .$e->getMessage()
+            ]);
         }
     }
 

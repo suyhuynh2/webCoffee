@@ -2,7 +2,8 @@
 /* eslint-disable react/prop-types */
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUser, faLock } from "@fortawesome/free-solid-svg-icons";
-import { faFacebook, faGoogle, faTwitter, } from "@fortawesome/free-brands-svg-icons";
+import { faFacebook, faGoogle, faTwitter } from "@fortawesome/free-brands-svg-icons";
+import { faCoffee } from '@fortawesome/free-solid-svg-icons';
 
 import { useEffect, useState } from "react";
 import { LoginAPI } from "../app/api/auth";
@@ -41,7 +42,7 @@ export default function Login({ setForm, setActivePage  }) {
         <div className="login-box">
           <h1>
             Đăng nhập
-            {/* <FontAwesomeIcon icon={faCoffee} /> */}
+            <FontAwesomeIcon icon={faCoffee} />
           </h1>
 
           <div className="input-box">

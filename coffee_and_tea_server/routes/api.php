@@ -22,6 +22,7 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('auth:api')->group(function () {
     Route::get('/get_all_product', [DashboardController::class, 'getAllProduct']);
     Route::get('/get_all_revenue', [DashboardController::class, 'getAllRevenue']);
+    Route::get('/get_all_order', [DashboardController:: class, 'getAllOrders']);
 });
 
 /* API mở, không cần check middleware() */

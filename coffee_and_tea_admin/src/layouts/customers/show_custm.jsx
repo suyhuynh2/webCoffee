@@ -9,14 +9,13 @@ const ShowCustomers = () => {
   const [selectedCustomer, setSelectedCustomer] = useState(null);
   const [isShowInfo, setShowInfo] = useState(false);
 
-
   const handleFilter = (event) => {
     setSearch(event.target.value);
   };
 
   const handleInfoPrd = (customer) => {
     setSelectedCustomer(customer);
-    setShowInfo(true);
+    setShowInfo(prev => !prev);
   };
 
   useEffect(() => {
@@ -151,7 +150,7 @@ const ShowCustomers = () => {
 
         {selectedCustomer && isShowInfo && (
           <div className="wrap-prd-info">
-            <CustomerInfo isOpen={isShowInfo} customer={selectedCustomer} />
+            <CustomerInfo isOpen={isShowInfo} customer={selectedCustomer} isBackPrdList={handleInfoPrd} />
           </div>
         )}
       </div>

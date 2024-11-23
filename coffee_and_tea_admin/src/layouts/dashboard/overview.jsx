@@ -1,59 +1,76 @@
+/* eslint-disable no-unused-vars */
 /* eslint-disable react/prop-types */
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBoxes, faShoppingCart, faDollarSign, faUser } from '@fortawesome/free-solid-svg-icons';
 
 export default function OverviewDashboard(
     { 
-        curRev, 
-        prevRev 
+        quantity,
+        quantityCurrentMonth,
+        quantityPrevMonth,
+        totalRevenue, 
+        revenueCurrentMonth, 
+        revenuePrevMonth,
+        orderFinish,
+        orderQuantity
     }
 ) {
+    const subQuantity = quantityCurrentMonth - quantityPrevMonth;
+    const subRevenue = revenueCurrentMonth - revenuePrevMonth;
     return(
         <>
             <div className="data-overview">
+
                 <div className="data-box">
-                    {/* theo tháng */}
                     <div className='data-box-top'>
                         <FontAwesomeIcon icon={ faBoxes } />
                         <div className="in4-box">
-                            {/* tổng sp đã bán trong tháng */}
                             <p>Sản phẩm đã bán</p> 
-                            <h3>{curRev}</h3>
+                            <h3>{quantityCurrentMonth}</h3>
                         </div>
                     </div>
                     <hr />
-                    {/* so sánh vs sản phẩm đã bán được của tháng trước */}
                     <p className="sale-title">
-                        <span style={{color: (curRev - prevRev) > 0 ? "green" : "red"}}>
-                            {((curRev - prevRev) > 0) ? 
-                                `+ ${(((curRev-prevRev)/prevRev)*100).toFixed(2)}% ` :
-                                `${(((curRev-prevRev)/prevRev)*100).toFixed(2)}% `}
+                        <span style={{color: subQuantity > 0 ? "green" : "red"}}>
+                            {(subQuantity > 0) ?
+                                `+ ${(((subQuantity)/quantityPrevMonth)*100).toFixed(2)}% ` :
+                                `${(((subQuantity)/quantityPrevMonth)*100).toFixed(2)}% `}
                         </span>
                         tháng trước
                     </p>
                 </div>
+
                 <div className="data-box">
                     <div className='data-box-top'>
                         <FontAwesomeIcon icon={faShoppingCart } />
                         <div className="in4-box">
                             <p>Tổng số đơn hàng</p>
-                            <h3></h3>
+                            <h3>{orderQuantity}</h3>
                         </div>
                     </div>
                     <hr />
-                    <p className="sale-title"><span style={{color: "green"}}>+55%</span> tuần trước</p>
+                    <p className="sale-title">
+                        <span style={{color: "green"}}>{orderFinish} </span>
+                        đơn đã hoàn thành
+                    </p>
                 </div>
+
                 <div className="data-box">
                     <div className='data-box-top'>
                         <FontAwesomeIcon icon={faDollarSign } />
                         <div className="in4-box">
-                            <p>Doanh thu</p>
-                            <h3>3020</h3>
+                            <p>Doanh thu tháng</p>
+                            <h3>{revenueCurrentMonth.toLocaleString('vi-VN')} VND</h3>
                         </div>
                     </div>
                     <hr />
-                    <p className="sale-title"><span style={{color: "green"}}>+55%</span> tuần trước</p>
+                    <span style={{color: subRevenue > 0 ? "green" : "red"}}>
+                        {(subRevenue > 0) ?
+                            `+ ${(((subRevenue)/revenuePrevMonth)*100).toFixed(2)}% ` :
+                            `${(((subRevenue)/revenuePrevMonth)*100).toFixed(2)}% `}
+                    </span>
                 </div>
+
                 <div className="data-box">
                     <div className='data-box-top'>
                         <FontAwesomeIcon icon={faUser} />

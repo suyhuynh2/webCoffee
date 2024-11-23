@@ -19,10 +19,10 @@ return new class extends Migration
             $table->string('email');
             $table->string('birth_date');
             $table->string('address');
-            $table->string('balance');
+            $table->integer('balance');
             $table->string('image');
-            $table->string('verify');
-            $table->string('status');
+            $table->integer('verify');
+            $table->integer('status');
             $table->timestamps();
         });
     }
