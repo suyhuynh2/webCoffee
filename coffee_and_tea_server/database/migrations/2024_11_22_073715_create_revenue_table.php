@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::create('revenue', function (Blueprint $table) {
             $table->id();
-            $table->integer('categr_id');
-            $table->integer('prd_id');
+            $table->string('categr_name');
+            $table->string('prd_name');
             $table->integer('quantity');
             $table->integer('total_revenue');
             $table->string('date');

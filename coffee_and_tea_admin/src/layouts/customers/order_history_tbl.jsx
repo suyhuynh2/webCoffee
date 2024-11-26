@@ -1,61 +1,66 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import DataTable from 'react-data-table-component';
+import { getAllHisAPI } from '../../app/api/customersApi';
 
 const ShowOrderHistory = () => {
   const [search, setSearch] = useState('');
+  const [history, setHistory] = useState([]);
 
   const handleFilter = (event) => {
     setSearch(event.target.value);
   };
 
-  // Dữ liệu mẫu cho lịch sử mua hàng
-  const data = [
-    {
-        orderId: 'ORD001',
-        customerId: 'CUS001',
-        productName: 'Sản phẩm A',
-        quantity: 2,
-        totalPrice: '1,000,000 VND',
-        orderDate: '22/12/2024',
-        status: 'Đang giao',
-        view: <div style={{color: 'black', cursor: 'pointer'}} >[Xem chi tiết]</div>
+  useEffect(() => {
+    const fetchHistory = async () => {
+      try {
+        const historyData = await getAllHisAPI();
+        setHistory(historyData);
+      } catch (error) {
+        console.error("Failed to fetch history: ", error);
       }
-  ];
+    };
 
-  // Lọc dữ liệu theo tên sản phẩm
-  const filteredData = data.filter(item =>
-    item.productName.toLowerCase().includes(search.toLowerCase())
+    fetchHistory();
+  }, []);
+
+  const filteredData = history.filter(
+    (item) =>
+    item.prd_name &&
+    item.prd_name.toLowerCase().includes(search.toLowerCase())
   );
 
-  // Cấu hình các cột của bảng
   const columns = [
     {
       name: <span style={{ fontSize: '0.9rem' }}> ID Đơn hàng </span>,
-      selector: row => row.orderId,
+      selector: row => row.id,
       sortable: true,
       width: '150px'
     },
     {
       name: <span style={{ fontSize: '0.9rem' }}> Tên sản phẩm </span>,
-      selector: row => row.productName,
+      selector: row => row.prd_name,
       sortable: true,
       width: '200px'
     },
     {
       name: <span style={{ fontSize: '0.9rem' }}> Số lượng </span>,
-      selector: row => row.quantity,
+      selector: row => row.qty,
       sortable: true,
       width: '120px'
     },
     {
       name: <span style={{ fontSize: '0.9rem' }}> Tổng giá trị </span>,
-      selector: row => row.totalPrice,
+      selector: (row) =>  new Intl.NumberFormat('vi-VN').format(row.total_price),
       sortable: true,
       width: '150px'
     },
     {
       name: <span style={{ fontSize: '0.9rem' }}> Ngày mua </span>,
-      selector: row => row.orderDate,
+      selector: (row) => {
+        const date = new Date(row.created_at);
+        const formattedDate = `${date.getDate().toString().padStart(2, '0')}/${(date.getMonth() + 1).toString().padStart(2, '0')}/${date.getFullYear()}`;
+        return formattedDate;
+      },
       sortable: true,
       width: '150px'
     },
@@ -67,7 +72,13 @@ const ShowOrderHistory = () => {
     },
     {
       name: <span style={{ fontSize: '0.9rem' }}></span>,
-      selector: row => row.view,
+      selector: (row) => (
+        <div
+          style={{ color: "black", cursor: "pointer" }}
+        >
+          [Xem chi tiết]
+        </div>
+      ),
       sortable: true,
       width: '120px'
     },

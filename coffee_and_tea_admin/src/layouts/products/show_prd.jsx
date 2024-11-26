@@ -1,173 +1,211 @@
 /* eslint-disable react/prop-types */
-import { useState } from 'react';
-import DataTable from 'react-data-table-component';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faAdd, faTrash, faWrench } from '@fortawesome/free-solid-svg-icons';
-import ProductInfo from './prd_info';
+import { useState, useEffect } from "react";
+import DataTable from "react-data-table-component";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faAdd, faTrash, faWrench } from "@fortawesome/free-solid-svg-icons";
+import ProductInfo from "./prd_info";
+import { getAllPrdAPI, deletePrdAPI } from "../../app/api/productsApi";
+import { getAllCtgAPI } from "../../app/api/categoriesApi";
+import AddPrd from "./add_prd";
 
-const ShowPrd = ({isOpen, handleOpenAdd}) => {
-  const [search, setSearch] = useState('');
+const ShowPrd = ({ isOpen, handleOpenAdd }) => {
+  const [search, setSearch] = useState("");
+  const [products, setProducts] = useState([]);
+  const [categories, setCategories] = useState([]);
+  const [selectedProduct, setSelectedProduct] = useState(null);
 
   const handleFilter = (event) => {
     setSearch(event.target.value);
   };
 
   const [isShowInfo, setShowInfo] = useState(false);
-  const handleInfoPrd = () => {
-    setShowInfo(prev => !prev);
-  }
+  const handleInfoPrd = (product) => {
+    setSelectedProduct(product);
+    setShowInfo((prev) => !prev);
+  };
 
-  const data = [
-    {
-      id: 'C001',
-      name: 'Cá Betta Xanh',
-      image: 'link-to-betta-fish-image1.jpg',
-      remaining: 30,
-      price: '120.000 VND',
-      delete: <FontAwesomeIcon icon={faTrash} />,
-      fix: <FontAwesomeIcon icon={faWrench} />,
-      view: <div style={{color: 'black', cursor: 'pointer'}} onClick={() => handleInfoPrd()}>[Xem chi tiết]</div>
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const productsData = await getAllPrdAPI();
+        setProducts(productsData);
+      } catch (error) {
+        console.error("Failed to fetch products: ", error);
+      }
+    };
+
+    fetchProducts();
+  }, []);
+
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const categoriesData = await getAllCtgAPI();
+        setCategories(categoriesData);
+      } catch (error) {
+        console.error("Failed to fetch categories: ", error);
+      }
+    };
+    fetchCategories();
+  }, []);
+
+  const handleDelete = async (id) => {
+    if (window.confirm("Bạn có chắc chắn muốn xóa sản phẩm này?")) {
+      try {
+        await deletePrdAPI(id);
+        setProducts(products.filter((product) => product.id !== id));
+        alert("Xóa sản phẩm thành công!");
+      } catch (error) {
+        console.error("Xóa sản phẩm thất bại: ", error);
+        alert("Đã xảy ra lỗi khi xóa sản phẩm.");
+      }
     }
-  ];
+  };
 
-  const filteredData = data.filter(item =>
+  const filteredData = products.filter((item) =>
     item.name.toLowerCase().includes(search.toLowerCase())
   );
 
   const columns = [
     {
-      name: <span style={{ fontSize: '0.9rem' }}> ID </span>,
-      selector: row => row.id,
+      name: <span style={{ fontSize: "0.9rem" }}> ID </span>,
+      selector: (row) => row.id,
       sortable: true,
-      width: '100px'
+      width: "100px",
     },
     {
-      name: <span
-              style={{
-                  fontSize: '0.9rem'
-              }}
-          >
-              Tên sản phẩm
-          </span>,
-      selector: row => row.name,
+      name: <span style={{ fontSize: "0.9rem" }}> Tên sản phẩm </span>,
+      selector: (row) => row.name,
       sortable: true,
-      width: '180px'
+      width: "180px",
     },
     {
-      name: <span
-              style={{
-                  fontSize: '0.9rem'
-              }}
-          >
-              Hình ảnh
-          </span>,
-      selector: row => row.image,
+      name: <span style={{ fontSize: "0.9rem" }}> Hình ảnh </span>,
+      selector: (row) => row.image,
       sortable: true,
-      width: '180px'
+      width: "180px",
     },
     {
-      name: <span
-              style={{
-                  fontSize: '0.9rem'
-              }}
-          >
-              Số lượng
-          </span>,
-      selector: row => row.remaining,
+      name: <span style={{ fontSize: "0.9rem" }}> Số lượng </span>,
+      selector: (row) => row.quantity.toLocaleString("de-DE"),
       sortable: true,
     },
     {
-      name: <span
-              style={{
-                  fontSize: '0.9rem'
-              }}
-          >
-              Giá bán
-          </span>,
-      selector: row => row.price,
+      name: <span style={{ fontSize: "0.9rem" }}> Giá bán </span>,
+      selector: (row) => new Intl.NumberFormat("vi-VN").format(row.price),
       sortable: true,
     },
     {
-      name: <span
-              style={{
-                  fontSize: '0.9rem',
-              }}
-          >
-              Sửa
-          </span>,
-      selector: row => row.delete,
+      name: <span style={{ fontSize: "0.9rem" }}> Sửa </span>,
+      cell: (row) => (
+        <FontAwesomeIcon
+          icon={faWrench}
+          style={{ cursor: "pointer" }}
+          onClick={() => handleInfoPrd(row)}
+        />
+      ),
       sortable: true,
-      width: '80px',
+      width: "80px",
     },
     {
-      name: <span
-              style={{
-                  fontSize: '0.9rem'
-              }}
-          >
-              Xóa
-          </span>,
-      selector: row => row.fix,
+      name: <span style={{ fontSize: "0.9rem" }}> Xóa </span>,
+      cell: (row) => (
+        <FontAwesomeIcon
+          icon={faTrash}
+          style={{ cursor: "pointer" }}
+          onClick={() => handleDelete(row.id)}
+        />
+      ),
       sortable: true,
-      width: '80px'
+      width: "80px",
     },
     {
-      name: <span
-              style={{
-                  fontSize: '0.9rem'
-              }}
-          >
-          </span>,
-      selector: row => row.view,
+      name: <span style={{ fontSize: "0.9rem" }}></span>,
+      selector: (row) => row.view,
       sortable: true,
     },
   ];
 
+  const fetchProducts = async () => {
+    try {
+      const productsData = await getAllPrdAPI();
+      setProducts(productsData);
+    } catch (error) {
+      console.error("Failed to fetch products: ", error);
+    }
+  };
+
+  const fetchCategories = async () => {
+    try {
+      const categoriesData = await getAllCtgAPI();
+      setCategories(categoriesData);
+    } catch (error) {
+      console.error("Failed to fetch categories: ", error);
+    }
+  };
 
   return (
     <>
-    <div className="wrap-table-prod" style={{
-          display: !isOpen ? 'block' : 'none'
-        }}>
-
-        <div style={{display: !isShowInfo ? 'block' : 'none'}}>
-          <div className='-header-table-prd' style={{
+      <AddPrd
+        isOpen={isOpen}
+        backPrdForm={handleOpenAdd}
+        fetchProducts={fetchProducts}
+        fetchCategories={fetchCategories}
+      />
+      <div
+        className="wrap-table-prod"
+        style={{
+          display: !isOpen ? "block" : "none",
+        }}
+      >
+        <div style={{ display: !isShowInfo ? "block" : "none" }}>
+          <div
+            className="-header-table-prd"
+            style={{
               borderBottom: "1px solid gray",
-              borderRadius: "5px 5px 0 0"
-          }}>
-            <div className='-header-lef'>
-                <select className="-header-select" name="" id="">
-                    <option value="">Cá cảnh</option>
-                    <option value="">Cây thủy sinh</option>
-                    <option value="">Thức ăn</option>
-                    <option value="">Phụ kiện</option>
-                </select>
-                
-                <input
-                    type="text"
-                    placeholder="Tìm kiếm sản phẩm"
-                    value={search}
-                    onChange={handleFilter}
-                    style={{ 
-                        marginRight: '10px',
-                        padding: '10px', 
-                        width: '250px', 
-                        borderRight: 'none',
-                        borderLeft: 'none',
-                        borderTop: 'none',
-                        background: 'rgba(251, 251, 251, 0.971)',
-                        outline: 'none',
-                    }}
-                />
+              borderRadius: "5px 5px 0 0",
+            }}
+          >
+            <div className="-header-lef">
+              <select className="-header-select" name="" id="">
+                {categories.map((category) => (
+                  <option key={category.id} value={category.category}>
+                    {category.category}
+                  </option>
+                ))}
+              </select>
+
+              <input
+                type="text"
+                placeholder="Tìm kiếm sản phẩm"
+                value={search}
+                onChange={handleFilter}
+                style={{
+                  marginRight: "10px",
+                  padding: "10px",
+                  width: "250px",
+                  borderRight: "none",
+                  borderLeft: "none",
+                  borderTop: "none",
+                  background: "rgba(251, 251, 251, 0.971)",
+                  outline: "none",
+                }}
+              />
             </div>
 
-            <div className='-header-add-btn' onClick={handleOpenAdd}>
-                <FontAwesomeIcon icon={faAdd}/>
-                Thêm
+            <div className="-header-add-btn" onClick={handleOpenAdd}>
+              <FontAwesomeIcon icon={faAdd} />
+              Thêm
             </div>
           </div>
 
-          <div style={{maxHeight: '100%', overflowY: 'auto', borderRadius: "10px" }}>
+          <div
+            style={{
+              maxHeight: "100%",
+              overflowY: "auto",
+              borderRadius: "10px",
+            }}
+          >
             <DataTable
               columns={columns}
               data={filteredData}
@@ -180,11 +218,15 @@ const ShowPrd = ({isOpen, handleOpenAdd}) => {
             />
           </div>
         </div>
-    
+
         <div className="wrap-prd-info">
-          <ProductInfo isOpen={isShowInfo} isBackPrdList={handleInfoPrd}/>
+          <ProductInfo
+            isOpen={isShowInfo}
+            isBackPrdList={handleInfoPrd}
+            product={selectedProduct}
+          />
         </div>
-    </div>
+      </div>
     </>
   );
 };

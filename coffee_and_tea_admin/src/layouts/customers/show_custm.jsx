@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import DataTable from "react-data-table-component";
 import CustomerInfo from "./custm_info";
-import { getAllCus } from "../../app/api/customersApi";
+import { getAllCusAPI } from "../../app/api/customersApi";
 
 const ShowCustomers = () => {
   const [search, setSearch] = useState("");
@@ -20,16 +20,15 @@ const ShowCustomers = () => {
 
   useEffect(() => {
     const fetchCustomers = async () => {
-      const customersData = await getAllCus();
-      setCustomers(customersData);
+      try {
+        const customersData = await getAllCusAPI();
+        setCustomers(customersData);
+      } catch (error) {
+        console.error("Failed to fetch customers: ", error);
+      }
     };
+
     fetchCustomers();
-
-    const intervalId = setInterval(() => {
-      fetchCustomers();
-    }, 5000);
-
-    return () => clearInterval(intervalId);
   }, []);
 
   const filteredData = customers.filter(
@@ -65,19 +64,23 @@ const ShowCustomers = () => {
     },
     {
       name: <span style={{ fontSize: "0.9rem" }}> Ngày đăng ký </span>,
-      selector: (row) => row.created_at,
+      selector: (row) => {
+        const date = new Date(row.created_at);
+        const formattedDate = `${date.getDate().toString().padStart(2, '0')}/${(date.getMonth() + 1).toString().padStart(2, '0')}/${date.getFullYear()}`;
+        return formattedDate;
+      },
       sortable: true,
       width: "140px",
     },
     {
       name: <span style={{ fontSize: "0.9rem" }}> Tổng chỉ tiêu </span>,
-      selector: (row) => row.total_price,
+      selector: (row) =>  new Intl.NumberFormat('vi-VN').format(row.balance),
       sortable: true,
       width: "140px",
     },
     {
       name: <span style={{ fontSize: "0.9rem" }}> Trạng thái </span>,
-      selector: (row) => row.status,
+      selector: (row) => (row.status == 1 ? "Không hoạt động" : "Hoạt động"),
       sortable: true,
       width: "140px",
     },

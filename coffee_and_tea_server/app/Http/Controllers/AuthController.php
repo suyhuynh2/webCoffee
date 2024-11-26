@@ -13,10 +13,12 @@ use App\Models\PasswordReset;
 use App\Models\VerifyEmail;
 use App\Security\CryptAES;
 
-class AuthController extends Controller {
+class AuthController extends Controller
+{
 
     // Admin register API
-    public function AdminRegister(Request $request) {
+    public function AdminRegister(Request $request)
+    {
 
         try {
 
@@ -50,20 +52,18 @@ class AuthController extends Controller {
             return response()->json([
                 'message' => 'Đăng ký thành công.\nVui lòng kiểm tra email để xác thực tài khoản.\nXin cảm ơn!',
             ], 201);
-
         } catch (\Exception $e) {
 
             return response()->json([
                 'message' => 'Đăng ký thất bại, ' . $e->getMessage()
             ], 400);
-
         }
-
     }
 
 
     // Admin login API
-    public function AdminLogin(Request $request) {
+    public function AdminLogin(Request $request)
+    {
 
         try {
 
@@ -87,11 +87,10 @@ class AuthController extends Controller {
 
                     return response()->json([
                         'message' => 'Tài khoản chưa được kích hoạt'
-                        .'Vui lòng kiểm tra email: '
-                        .$email
-                        .' để kích hoạt tài khoản.Thanks!'
+                            . 'Vui lòng kiểm tra email: '
+                            . $email
+                            . ' để kích hoạt tài khoản.Thanks!'
                     ], 403);
-
                 }
 
                 // tạo token jwt
@@ -117,19 +116,17 @@ class AuthController extends Controller {
             return response()->json([
                 'message' => 'Mật khẩu không chính xác!'
             ], 401);
-
-        }catch (\Exception $e) {
+        } catch (\Exception $e) {
 
             return response()->json([
                 'message' => 'Đăng nhập thất bại, ' . $e->getMessage()
             ], 500);
-
         }
-
     }
 
     // Admin forgot password API
-    public function AdminForgotPassword(Request $request) {
+    public function AdminForgotPassword(Request $request)
+    {
         try {
             $email = CryptAES::decryptAES($request->input('email'));
 
@@ -145,7 +142,7 @@ class AuthController extends Controller {
             return response()->json([
                 'message' => 'Kiểm tra email để lấy lại mật khẩu'
             ], 200);
-        }catch (\Exception $e) {
+        } catch (\Exception $e) {
             return response()->json([
                 'message' => 'Gửi mật khẩu mới thất bại, ' . $e->getMessage()
             ], 500);
@@ -153,10 +150,11 @@ class AuthController extends Controller {
     }
 
 
-/* --------------------------------------------------------------------------------------------------------- */
+    /* --------------------------------------------------------------------------------------------------------- */
 
     // Gửi mail xác thực + lấy lại mật khẩu
-    public function SendEmail($email, $handle) {
+    public function SendEmail($email, $handle)
+    {
         try {
             $admin = Admin::where('email', $email)->first();
             $token = Str::random(64);
@@ -177,13 +175,13 @@ class AuthController extends Controller {
                     'email' => $email,
                     'token' => $token,
                     'expires_at' => now()->addMinutes(5)
-                ], function($message) use ($email, $admin) {
+                ], function ($message) use ($email, $admin) {
                     $message->to($email, $admin->name)
-                            ->subject('Xác thực tài khoản Coffee & Tea');
+                        ->subject('Xác thực tài khoản Coffee & Tea');
                 });
             }
 
-            if ($handle === 'forgot_password'){
+            if ($handle === 'forgot_password') {
                 PasswordReset::where('email', $email)->delete();
                 PasswordReset::create([
                     'email' => $email,
@@ -196,14 +194,14 @@ class AuthController extends Controller {
                     'email' => $email,
                     'token' => $token,
                     'expires_at' => now()->addMinutes(5)
-                ], function($message) use ($email, $admin) {
+                ], function ($message) use ($email, $admin) {
                     $message->to($email, $admin->name)
-                            ->subject('Lấy lại mật khẩu tài khoản Coffee & Tea');
+                        ->subject('Lấy lại mật khẩu tài khoản Coffee & Tea');
                 });
             }
 
             return true;
-        }catch (\Exception $e) {
+        } catch (\Exception $e) {
             Log::error('Email verification error: ' . $e->getMessage());
             throw $e;
         }
@@ -218,17 +216,18 @@ class AuthController extends Controller {
         Nếu token hợp lệ, cập nhật trạng thái admin và xóa token
         Nếu token hết hạn, báo lỗi và gửi lại email xác thực mới
      */
-    public function VerifyToken($email, $token, $handle) {
+    public function VerifyToken($email, $token, $handle)
+    {
         try {
             if ($handle == 'verify_account') {
                 $verifyEmail = VerifyEmail::where('email', $email)
-                                        ->where('token', $token)
-                                        ->first();
+                    ->where('token', $token)
+                    ->first();
             }
             if ($handle == 'forgot_password') {
                 $verifyEmail = PasswordReset::where('email', $email)
-                                        ->where('token', $token)
-                                        ->first();
+                    ->where('token', $token)
+                    ->first();
             }
 
             // kiểm tra tồn tại email và token
@@ -255,7 +254,7 @@ class AuthController extends Controller {
                     'email_verified_at' => now()
                 ]);
             }
-            if ($handle == 'forgot_password'){
+            if ($handle == 'forgot_password') {
                 $newPassword = self::GetNewPassword();
                 Admin::where('email', $email)->update([
                     'password' => CryptAES::hashPassword($newPassword)
@@ -270,21 +269,17 @@ class AuthController extends Controller {
                 'status' => $handle === 'forgot_password' ? 'new-password' : 'success',
                 'message' => $handle === 'forgot_password' ? $newPassword : ''
             ]);
-
         } catch (\Exception $e) {
             Log::error('Account activation error: ' . $e->getMessage());
-                return redirect()->route('verify.page')->with([
-                    'status' => 'error',
-                    'message' => $e->getMessage()
+            return redirect()->route('verify.page')->with([
+                'status' => 'error',
+                'message' => $e->getMessage()
             ]);
         }
     }
 
-    public function GetNewPassword() {
+    public function GetNewPassword()
+    {
         return str_pad(random_int(0, 99999999), 8, '0', STR_PAD_LEFT);
     }
 }
-
-
-
-

@@ -25,6 +25,21 @@ export default function CustomerInfo({ isOpen, isBackPrdList, customer }) {
     setShowHistoryPage((prev) => !prev);
   };
 
+  const handleFileChange = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setCustomerImage(reader.result);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const [customerImage, setCustomerImage] = useState(
+    customer?.image || "default-avatar-url.jpg"
+  );
+
   return (
     <>
       <div
@@ -62,12 +77,21 @@ export default function CustomerInfo({ isOpen, isBackPrdList, customer }) {
               handleUploadClick={handleUploadClick}
               isUnlockInput={isUnlockInput}
               customer={customer}
+              setCustomerImage={setCustomerImage}
             />
           </div>
 
           <div className="wrap-right-add-prd">
             <h3>Avatar</h3>
-            <img src="/public/logo-black.png" alt="" />
+            <div className="avatar-container">
+              <img src={customerImage} alt="Avatar" className="avatar-image" />
+            </div>
+            <input
+              type="file"
+              ref={fileInputRef}
+              style={{ display: "none" }}
+              onChange={handleFileChange}
+            />
           </div>
         </div>
 
